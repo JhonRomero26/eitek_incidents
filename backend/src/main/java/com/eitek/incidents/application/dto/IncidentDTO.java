@@ -19,6 +19,7 @@ public class IncidentDTO {
     private IncidentStatus status;
     private String description;
     private Long assigneeId;
+    private Long assignerId;
     private LocalDate dateAssigned;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
