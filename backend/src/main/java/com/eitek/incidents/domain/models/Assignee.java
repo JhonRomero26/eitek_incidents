@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import org.checkerframework.checker.units.qual.A;
-
 @Data
 @Builder
 @NoArgsConstructor
