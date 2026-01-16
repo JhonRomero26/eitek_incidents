@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import org.checkerframework.checker.units.qual.A;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -53,6 +55,11 @@ public class Assignee {
      * Solo admin tiene permisos de eliminación
      */
     public boolean canDeleteIncidents() {
+        return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role) ||
+               AssigneeRoles.SUPPORT.name().equalsIgnoreCase(this.role);
+    }
+
+    public boolean isAdmin() {
         return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role);
     }
 }
