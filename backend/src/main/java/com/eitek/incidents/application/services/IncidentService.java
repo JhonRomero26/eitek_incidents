@@ -92,9 +92,23 @@ public class IncidentService {
         incident.setDateAssigned(LocalDate.now());
     }
 
-    public void deleteIncident(Long id) {
+    public void deleteIncident(Long id, Long deleterId) {
+        // Verificar que la incidencia existe
         incidentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Incident", "id", id));
+        
+        // Validar permisos de eliminación
+        if (deleterId == null) {
+            throw new InsufficientPermissionsException("Se requiere autenticación para eliminar incidentes");
+        }
+        
+        Assignee deleter = assigneeRepository.findById(deleterId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", deleterId));
+        
+        if (!deleter.canDeleteIncidents()) {
+            throw new InsufficientPermissionsException(deleter.getRole(), "eliminar incidentes");
+        }
+        
         incidentRepository.deleteById(id);
     }
 

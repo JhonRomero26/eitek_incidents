@@ -47,4 +47,12 @@ public class Assignee {
         }
         return true; // admin y support pueden asignar a cualquier rol
     }
+    
+    /**
+     * Verifica si este assignee puede eliminar incidentes
+     * Solo admin tiene permisos de eliminación
+     */
+    public boolean canDeleteIncidents() {
+        return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role);
+    }
 }

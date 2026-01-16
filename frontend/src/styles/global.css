@@ -1,8 +1,0 @@
-@import 'tailwindcss';
-@import 'tailwind-animations';
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --font-sans: 'Onest Variable', sans-serif;
-}
