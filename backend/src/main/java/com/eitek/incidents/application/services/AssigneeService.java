@@ -21,8 +21,8 @@ public class AssigneeService {
     public AssigneeDTO createAssignee(AssigneeDTO assigneeDTO) {
         Assignee assignee = Assignee.builder()
                 .name(assigneeDTO.getName())
-                .role(assigneeDTO.getRole())
-                .isActive(assigneeDTO.isActive())
+                .role(assigneeDTO.getRole() != null ? assigneeDTO.getRole() : AssigneeRoles.OPERATOR)
+                .isActive(true)
                 .build();
         
         Assignee savedAssignee = assigneeRepository.save(assignee);
@@ -39,10 +39,27 @@ public class AssigneeService {
         Assignee existingAssignee = assigneeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", id));
         existingAssignee.setName(assigneeDTO.getName());
-        existingAssignee.setRole(assigneeDTO.getRole());
-        existingAssignee.setActive(assigneeDTO.isActive());
+        if (assigneeDTO.getRole() != null) {
+            existingAssignee.setRole(assigneeDTO.getRole());
+        }
         Assignee updatedAssignee = assigneeRepository.save(existingAssignee);
         return mapToDTO(updatedAssignee);
+    }
+
+    public AssigneeDTO activateAssignee(Long id) {
+        Assignee assignee = assigneeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", id));
+        assignee.setActive(true);
+        Assignee savedAssignee = assigneeRepository.save(assignee);
+        return mapToDTO(savedAssignee);
+    }
+
+    public AssigneeDTO deactivateAssignee(Long id) {
+        Assignee assignee = assigneeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", id));
+        assignee.setActive(false);
+        Assignee savedAssignee = assigneeRepository.save(assignee);
+        return mapToDTO(savedAssignee);
     }
 
     public void deleteAssignee(Long id, Long deleterId) {
@@ -56,18 +73,22 @@ public class AssigneeService {
         Assignee deleter = assigneeRepository.findById(deleterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Deleter", "id", deleterId));
         
-        if (!deleter.getRole().equals(AssigneeRoles.ADMIN.name())) {
+        if (!deleter.getRole().equals(AssigneeRoles.ADMIN)) {
             throw new InsufficientPermissionsException(deleter.getName(), "delete assignees");
         }
 
-        assignee.setActive(false);
-        assigneeRepository.save(assignee);
+        assigneeRepository.deleteById(id);
     }
-
-    // Implement 
 
     public List<AssigneeDTO> getAllAssignees() {
         return assigneeRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<AssigneeDTO> getActiveAssignees() {
+        return assigneeRepository.findAll().stream()
+                .filter(Assignee::isActive)
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }

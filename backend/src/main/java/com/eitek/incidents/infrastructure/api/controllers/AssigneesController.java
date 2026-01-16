@@ -31,6 +31,12 @@ public class AssigneesController {
         return ResponseEntity.ok(assignees);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<AssigneeDTO>> getActiveAssignees() {
+        List<AssigneeDTO> assignees = assigneeService.getActiveAssignees();
+        return ResponseEntity.ok(assignees);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AssigneeDTO> getAssigneeById(@PathVariable Long id) {
         AssigneeDTO assignee = assigneeService.getAssigneeById(id);
@@ -47,6 +53,18 @@ public class AssigneesController {
     public ResponseEntity<AssigneeDTO> updateAssignee(@PathVariable Long id, @RequestBody AssigneeDTO dto) {
         AssigneeDTO updatedAssignee = assigneeService.updateAssignee(id, dto);
         return ResponseEntity.ok(updatedAssignee);
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<AssigneeDTO> activateAssignee(@PathVariable Long id) {
+        AssigneeDTO activatedAssignee = assigneeService.activateAssignee(id);
+        return ResponseEntity.ok(activatedAssignee);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<AssigneeDTO> deactivateAssignee(@PathVariable Long id) {
+        AssigneeDTO deactivatedAssignee = assigneeService.deactivateAssignee(id);
+        return ResponseEntity.ok(deactivatedAssignee);
     }
 
     @DeleteMapping("/{id}")

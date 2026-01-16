@@ -47,6 +47,11 @@ public class AssigneeRepositoryImpl implements AssigneeRepository {
             .map(this::toDomain)
             .toList();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        assigneeJpaRepository.deleteById(id);
+    }
     
     private Assignee toDomain(AssigneeEntity entity) {
         return Assignee.builder()

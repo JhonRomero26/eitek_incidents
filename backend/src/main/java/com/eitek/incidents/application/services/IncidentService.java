@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.eitek.incidents.application.dto.AssigneeDTO;
 import com.eitek.incidents.application.dto.IncidentDTO;
 import com.eitek.incidents.domain.exceptions.InsufficientPermissionsException;
 import com.eitek.incidents.domain.exceptions.ResourceNotFoundException;
@@ -113,12 +114,28 @@ public class IncidentService {
     }
 
     public IncidentDTO mapToDTO(Incident incident) {
+        AssigneeDTO assigneeDTO = null;
+        
+        if (incident.getAssigneeId() != null) {
+            assigneeDTO = assigneeRepository.findById(incident.getAssigneeId())
+                .map(assignee -> AssigneeDTO.builder()
+                    .id(assignee.getId())
+                    .name(assignee.getName())
+                    .role(assignee.getRole())
+                    .isActive(assignee.isActive())
+                    .createdAt(assignee.getCreatedAt())
+                    .updatedAt(assignee.getUpdatedAt())
+                    .build())
+                .orElse(null);
+        }
+        
         return IncidentDTO.builder()
                 .id(incident.getId())
                 .title(incident.getTitle())
                 .status(incident.getStatus())
                 .description(incident.getDescription())
                 .assigneeId(incident.getAssigneeId())
+                .assignee(assigneeDTO)
                 .dateAssigned(incident.getDateAssigned())
                 .createdAt(incident.getCreatedAt())
                 .updatedAt(incident.getUpdatedAt())

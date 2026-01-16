@@ -9,4 +9,5 @@ public interface AssigneeRepository {
     Optional<Assignee> findById(Long id);
     List<Assignee> findAll();
     List<Assignee> findActiveAssignees();
+    void deleteById(Long id);
 }
