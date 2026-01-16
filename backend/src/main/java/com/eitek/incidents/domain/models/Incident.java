@@ -26,6 +26,7 @@ public class Incident {
         if (this.status != IncidentStatus.OPEN) {
             throw new IllegalStateException("Incident can only be assigned if it is in OPEN status.");
         }
+
         this.assigneeId = assigneeId;
         this.status = IncidentStatus.ASSIGNED;
         this.dateAssigned = LocalDate.now();
