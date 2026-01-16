@@ -53,6 +53,7 @@ public class AssigneeRepositoryImpl implements AssigneeRepository {
             .id(entity.getId())
             .name(entity.getName())
             .isActive(entity.isActive())
+            .role(entity.getRole())
             .createdAt(entity.getCreatedAt())
             .updatedAt(entity.getUpdatedAt())
             .build();
@@ -62,6 +63,7 @@ public class AssigneeRepositoryImpl implements AssigneeRepository {
         AssigneeEntity entity = new AssigneeEntity();
         entity.setId(assignee.getId());
         entity.setName(assignee.getName());
+        entity.setRole(assignee.getRole());
         entity.setActive(assignee.isActive());
         entity.setCreatedAt(assignee.getCreatedAt());
         entity.setUpdatedAt(assignee.getUpdatedAt());

@@ -79,6 +79,7 @@ public class AssigneeService {
                 .role(assignee.getRole())
                 .isActive(assignee.isActive())
                 .createdAt(assignee.getCreatedAt())
+                .updatedAt(assignee.getUpdatedAt())
                 .build();
     }
 }

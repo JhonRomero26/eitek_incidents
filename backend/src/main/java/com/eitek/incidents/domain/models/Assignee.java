@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Assignee {
     private Long id;
     private String name;
-    private String role;
+    private AssigneeRoles role;
     private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -34,8 +34,8 @@ public class Assignee {
      * Solo admin y support tienen permisos de asignación
      */
     public boolean canAssignIncidents() {
-        return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role) ||
-               AssigneeRoles.SUPPORT.name().equalsIgnoreCase(this.role);
+        return AssigneeRoles.ADMIN.equals(this.role) ||
+               AssigneeRoles.SUPPORT.equals(this.role);
     }
     
     /**
@@ -53,11 +53,11 @@ public class Assignee {
      * Solo admin tiene permisos de eliminación
      */
     public boolean canDeleteIncidents() {
-        return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role) ||
-               AssigneeRoles.SUPPORT.name().equalsIgnoreCase(this.role);
+        return AssigneeRoles.ADMIN.equals(this.role) ||
+               AssigneeRoles.SUPPORT.equals(this.role);
     }
 
     public boolean isAdmin() {
-        return AssigneeRoles.ADMIN.name().equalsIgnoreCase(this.role);
+        return AssigneeRoles.ADMIN.equals(this.role);
     }
 }

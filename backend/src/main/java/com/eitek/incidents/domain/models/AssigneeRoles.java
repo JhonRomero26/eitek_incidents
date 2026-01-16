@@ -4,5 +4,6 @@ public enum AssigneeRoles {
     ADMIN,
     SUPPORT,
     TECHNICAL,
-    OPERATOR
+    OPERATOR,
+    USER
 }

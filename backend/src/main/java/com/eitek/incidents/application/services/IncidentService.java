@@ -84,7 +84,7 @@ public class IncidentService {
                     .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", assignerId));
             
             if (!assignmentValidator.canAssign(assigner, targetAssignee, incident)) {
-                throw new InsufficientPermissionsException(assigner.getRole(), "asignar incidentes");
+                throw new InsufficientPermissionsException(assigner.getRole().name(), "asignar incidentes");
             }
         }
         
@@ -106,7 +106,7 @@ public class IncidentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", deleterId));
         
         if (!deleter.canDeleteIncidents()) {
-            throw new InsufficientPermissionsException(deleter.getRole(), "eliminar incidentes");
+            throw new InsufficientPermissionsException(deleter.getRole().name(), "eliminar incidentes");
         }
         
         incidentRepository.deleteById(id);

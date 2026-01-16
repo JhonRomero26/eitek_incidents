@@ -2,6 +2,8 @@ package com.eitek.incidents.infrastructure.persistence.entities;
 
 import java.time.LocalDateTime;
 
+import com.eitek.incidents.domain.models.AssigneeRoles;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +18,9 @@ public class AssigneeEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String role;
+    private AssigneeRoles role = AssigneeRoles.USER;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
