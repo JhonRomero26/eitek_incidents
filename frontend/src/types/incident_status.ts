@@ -1,0 +1,1 @@
+export type IncidentStatus = 'open' | 'in_progress' | 'resolved' | 'canceled' | 'closed';
