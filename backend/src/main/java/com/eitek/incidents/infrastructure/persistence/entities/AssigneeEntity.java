@@ -1,6 +1,5 @@
 package com.eitek.incidents.infrastructure.persistence.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
