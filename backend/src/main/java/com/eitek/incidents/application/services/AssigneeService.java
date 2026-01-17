@@ -49,7 +49,8 @@ public class AssigneeService {
     public AssigneeDTO activateAssignee(Long id) {
         Assignee assignee = assigneeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", id));
-        assignee.setActive(true);
+        assignee.activate();
+        assignee.setUpdatedAt(java.time.LocalDateTime.now());
         Assignee savedAssignee = assigneeRepository.save(assignee);
         return mapToDTO(savedAssignee);
     }
@@ -57,7 +58,8 @@ public class AssigneeService {
     public AssigneeDTO deactivateAssignee(Long id) {
         Assignee assignee = assigneeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", id));
-        assignee.setActive(false);
+        assignee.deactivate();
+        assignee.setUpdatedAt(java.time.LocalDateTime.now());
         Assignee savedAssignee = assigneeRepository.save(assignee);
         return mapToDTO(savedAssignee);
     }

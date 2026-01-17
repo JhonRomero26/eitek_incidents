@@ -31,7 +31,7 @@ public class IncidentAssignmentValidator {
             return false;
         }
         
-        if (!assigner.canAssignIncidents()) {
+        if (!assigner.isAdmin()) {
             return false; 
         }
         

@@ -1,11 +1,13 @@
 package com.eitek.incidents.infrastructure.persistence.adapters;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import com.eitek.incidents.domain.models.Incident;
+import com.eitek.incidents.domain.models.IncidentStatus;
 import com.eitek.incidents.domain.repositories.IncidentRepository;
 import com.eitek.incidents.infrastructure.persistence.entities.IncidentEntity;
 import com.eitek.incidents.infrastructure.persistence.repository.JpaAssigneeRepository;
@@ -45,8 +47,10 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         IncidentEntity entity = new IncidentEntity();
         entity.setId(domain.getId());
         entity.setTitle(domain.getTitle());
-        entity.setDescription(domain.getDescription());
-        entity.setStatus(domain.getStatus());
+        // Usar cadena vacía si description es null (campo NOT NULL en BD)
+        entity.setDescription(domain.getDescription() != null ? domain.getDescription() : "");
+        // Usar OPEN como status por defecto
+        entity.setStatus(domain.getStatus() != null ? domain.getStatus() : IncidentStatus.OPEN);
         entity.setDateAssigned(domain.getDateAssigned());
         
         if (domain.getAssigneeId() != null) {
@@ -54,8 +58,10 @@ public class IncidentRepositoryImpl implements IncidentRepository {
                 .ifPresent(entity::setAssignee);
         }
         
-        entity.setCreatedAt(domain.getCreatedAt());
-        entity.setUpdatedAt(domain.getUpdatedAt());
+        // Usar fecha actual si createdAt o updatedAt son null
+        LocalDateTime now = LocalDateTime.now();
+        entity.setCreatedAt(domain.getCreatedAt() != null ? domain.getCreatedAt() : now);
+        entity.setUpdatedAt(domain.getUpdatedAt() != null ? domain.getUpdatedAt() : now);
         return entity;
     }
 

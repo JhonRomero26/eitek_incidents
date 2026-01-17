@@ -13,6 +13,7 @@ import com.eitek.incidents.domain.exceptions.InsufficientPermissionsException;
 import com.eitek.incidents.domain.exceptions.ResourceNotFoundException;
 import com.eitek.incidents.domain.models.Assignee;
 import com.eitek.incidents.domain.models.Incident;
+import com.eitek.incidents.domain.models.IncidentStatus;
 import com.eitek.incidents.domain.repositories.AssigneeRepository;
 import com.eitek.incidents.domain.repositories.IncidentRepository;
 import com.eitek.incidents.domain.services.IncidentAssignmentValidator;
@@ -27,8 +28,8 @@ public class IncidentService {
     public IncidentDTO createIncident(IncidentDTO incidentDTO) {
         Incident incident = Incident.builder()
                 .title(incidentDTO.getTitle())
-                .status(incidentDTO.getStatus())
-                .description(incidentDTO.getDescription())
+                .status(incidentDTO.getStatus() != null ? incidentDTO.getStatus() : IncidentStatus.OPEN)
+                .description(incidentDTO.getDescription() != null ? incidentDTO.getDescription() : "")
                 .build();
         Incident savedIncident = incidentRepository.save(incident);
         return mapToDTO(savedIncident);
@@ -51,9 +52,18 @@ public class IncidentService {
         Incident existingIncident = incidentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Incident", "id", id));
 
-        existingIncident.setTitle(incidentDTO.getTitle());
-        existingIncident.setStatus(incidentDTO.getStatus());
-        existingIncident.setDescription(incidentDTO.getDescription());
+        if (incidentDTO.getTitle() != null) {
+            existingIncident.setTitle(incidentDTO.getTitle());
+        }
+        if (incidentDTO.getStatus() != null) {
+            existingIncident.setStatus(incidentDTO.getStatus());
+        }
+        if (incidentDTO.getDescription() != null) {
+            existingIncident.setDescription(incidentDTO.getDescription());
+        }
+        
+        // Actualizar updatedAt
+        existingIncident.setUpdatedAt(java.time.LocalDateTime.now());
         
         // Si se está asignando a alguien, validar permisos
         if (incidentDTO.getAssigneeId() != null) {
@@ -77,14 +87,14 @@ public class IncidentService {
         // Auto-asignación
         if (assignerId == null || assignerId.equals(targetAssigneeId)) {
             if (!assignmentValidator.canSelfAssign(targetAssignee, incident)) {
-                throw new InsufficientPermissionsException("auto-asignarse esta incidencia");
+                throw new InsufficientPermissionsException("No puede auto-asignarse esta incidencia");
             }
         } else {
             // Asignación a otro
             Assignee assigner = assigneeRepository.findById(assignerId)
                     .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", assignerId));
             
-            if (!assignmentValidator.canAssign(assigner, targetAssignee, incident)) {
+            if (!assigner.isAdmin()) {
                 throw new InsufficientPermissionsException(assigner.getRole().name(), "asignar incidentes");
             }
         }
@@ -106,7 +116,7 @@ public class IncidentService {
         Assignee deleter = assigneeRepository.findById(deleterId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignee", "id", deleterId));
         
-        if (!deleter.canDeleteIncidents()) {
+        if (!deleter.isAdmin()) {
             throw new InsufficientPermissionsException(deleter.getRole().name(), "eliminar incidentes");
         }
         

@@ -1,6 +1,8 @@
 package com.eitek.incidents.application.dto;
 
 import com.eitek.incidents.domain.models.IncidentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,10 @@ import java.time.LocalDateTime;
 public class IncidentDTO {
     private Long id;
     private String title;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private IncidentStatus status;
+    
     private String description;
     private Long assigneeId;
     private AssigneeDTO assignee;

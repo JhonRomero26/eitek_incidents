@@ -10,7 +10,7 @@ public class InsufficientPermissionsException extends RuntimeException {
         super(message);
     }
     
-    public InsufficientPermissionsException(String role, String action) {
-        super(String.format("El rol '%s' no tiene permisos para %s", role, action));
+    public InsufficientPermissionsException(String userName, String action) {
+        super(String.format("El usuario '%s' no tiene permisos para %s", userName, action));
     }
 }
