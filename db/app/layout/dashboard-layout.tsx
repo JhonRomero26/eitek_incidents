@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard,
@@ -12,12 +12,12 @@ import {
   Search,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/app/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
+import { Button } from "@/presentation/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/presentation/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 interface NavItem {
